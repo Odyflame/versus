@@ -120,3 +120,97 @@
 - **사용자 질문 제안 기능:** 사용자가 직접 밸런스 게임 질문을 제안하고, 관리자 승인 후 앱에 등록되는 기능
 - **댓글 기능:** 각 질문에 대한 사용자들의 의견을 나눌 수 있는 댓글 창 추가
 - **카테고리 필터:** 사용자가 원하는 카테고리의 질문만 골라서 볼 수 있는 기능 추가
+
+---
+
+## 7. 🔥 Firebase 데이터 설정 가이드
+
+### 7.1. 현재 상태 및 문제 해결
+**현재 상황:** 앱이 실행되지만 빈 화면이 표시되는 이유는 Firebase Firestore에 질문 데이터가 없기 때문입니다.
+
+### 7.2. Firebase Console에서 데이터 업로드 (필수)
+
+#### 1단계: Firebase Console 접속
+1. [Firebase Console](https://console.firebase.google.com/) 접속
+2. 프로젝트 선택: **versus-97305**
+3. 왼쪽 메뉴에서 "Firestore Database" 선택
+
+#### 2단계: questions 컬렉션 생성
+1. "컬렉션 시작" 클릭
+2. 컬렉션 ID: `questions` 입력
+3. "다음" 클릭
+
+#### 3단계: 질문 데이터 입력
+각 질문마다 다음 필드를 가진 문서를 생성해야 합니다:
+
+**필수 필드 구조:**
+```
+id: string          (예: "romance_1")
+category: string     (예: "연애") 
+text: string         (질문 내용)
+choiceA: string      (첫 번째 선택지)
+choiceB: string      (두 번째 선택지)
+choiceACount: number (0으로 초기화)
+choiceBCount: number (0으로 초기화)
+```
+
+#### 4단계: 20개 질문 데이터 입력
+
+**연애 카테고리 (5개):**
+- `romance_1`: 깻잎 논쟁 - "괜찮다" vs "안된다"
+- `romance_2`: 새우 논쟁 - "괜찮다" vs "안된다"
+- `romance_3`: 연락 문제 - "내가 먼저 연락한다" vs "연락 올 때까지 기다린다"
+- `romance_4`: SNS 좋아요 - "신경 쓰인다" vs "상관없다"
+- `romance_5`: 친구 소개 - "소개해준다" vs "굳이 소개해줄 필요 없다"
+
+**직장생활 카테고리 (5개):**
+- `work_1`: 회식 제안 - "참석한다" vs "약속 있다며 거절한다"
+- `work_2`: 업무 실수 - "조용히 넘어간다" vs "내 실수가 아니라고 밝힌다"
+- `work_3`: 회사 선택 - "월급 적지만 워라밸 최고" vs "월급 많지만 야근 자주"
+- `work_4`: 점심시간 - "동료들과 항상 함께 먹는다" vs "무조건 혼밥이 편하다"
+- `work_5`: 메신저 답장 - "바로 답장한다" vs "다음 날 출근해서 답장한다"
+
+**우정 카테고리 (5개):**
+- `friend_1`: 돈 문제 - "빌려준다" vs "관계를 위해 거절한다"
+- `friend_2`: 친구의 애인 - "친구에게 솔직히 말한다" vs "친구의 선택이니 아무 말 안 한다"
+- `friend_3`: 지각 문제 - "기다릴 수 있다" vs "기다릴 수 없다"
+- `friend_4`: 여행 스타일 - "계획을 꼼꼼하게 짜서 움직인다" vs "즉흥적으로 마음 가는 대로 다닌다"
+- `friend_5`: 계산 방식 - "무조건 N분의 1이 편하다" vs "돈 더 있는 사람이 내는 게 좋다"
+
+**만약에게임 카테고리 (5개):**
+- `whatif_1`: 음식 취향 - "김치찌개" vs "된장찌개"
+- `whatif_2`: 초능력 - "투명인간이 될 수 있는 능력" vs "하늘을 나는 능력"
+- `whatif_3`: 로또 당첨 - "바로 퇴사한다" vs "아무도 모르게 계속 다닌다"
+- `whatif_4`: 타임머신 - "과거로 돌아가기" vs "미래로 가보기"
+- `whatif_5`: 동물 대화 - "내 반려동물과 하루 종일 대화하기" vs "전 세계 동물들의 생각을 1분간 듣기"
+
+### 7.3. 중요 설정 확인사항
+
+#### Bundle ID 일치 확인
+- GoogleService-Info.plist의 BUNDLE_ID: `com.avocado.think`
+- Firebase Console의 앱 설정에서 동일한 Bundle ID 등록 필요
+
+#### Firestore 보안 규칙
+개발 단계에서는 다음 규칙 사용:
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /questions/{questionId} {
+      allow read: if true;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['choiceACount', 'choiceBCount']);
+    }
+  }
+}
+```
+
+### 7.4. 데이터 입력 완료 후
+1. 앱 재실행
+2. 질문이 정상적으로 표시되는지 확인
+3. 투표 기능이 작동하는지 테스트
+4. 결과 화면이 올바르게 나타나는지 확인
+
+**⚠️ 중요:** 데이터 입력 없이는 앱이 빈 화면으로 나타납니다. 반드시 Firebase Console에서 위의 20개 질문 데이터를 먼저 입력해주세요.
+
+**📋 자세한 데이터 입력 가이드:** `think/FIREBASE_DATA_SETUP.md` 파일 참조

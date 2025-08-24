@@ -1,4 +1,5 @@
 import SwiftUI
+import GoogleMobileAds
 #if canImport(UIKit)
 import UIKit
 #endif
@@ -9,9 +10,11 @@ struct ResultView: View {
     let onNext: () -> Void
     
     @State private var showShareSheet = false
+    @StateObject private var adMobService = AdMobService.shared
     
     var body: some View {
-        VStack(spacing: 30) {
+        ZStack(alignment: .bottom) {
+            VStack(spacing: 30) {
             if let question = question {
                 VStack(spacing: 20) {
                     Text("결과")
@@ -80,12 +83,22 @@ struct ResultView: View {
                             .cornerRadius(12)
                     }
                 }
+                
+                Spacer(minLength: 60) // 배너 광고 공간 확보
             }
-        }
-        .padding(.vertical, 40)
-        .sheet(isPresented: $showShareSheet) {
-            if let question = question {
-                ShareSheet(question: question, selectedChoice: selectedChoice)
+            .padding(.vertical, 40)
+            .sheet(isPresented: $showShareSheet) {
+                if let question = question {
+                    ShareSheet(question: question, selectedChoice: selectedChoice)
+                }
+            }
+            
+            // 배너 광고 표시
+            VStack {
+                Spacer()
+                AdBannerContainer()
+                    .frame(height: 50)
+                    .background(Color.white.shadow(radius: 2))
             }
         }
     }

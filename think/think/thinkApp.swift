@@ -8,11 +8,16 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseAuth
+import GoogleMobileAds
 
 @main
 struct thinkApp: App {
     init() {
         FirebaseApp.configure()
+        
+        // Google Mobile Ads SDK 초기화
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        
         // 앱 시작 시 익명 로그인
         signInAnonymously()
     }
