@@ -16,7 +16,7 @@ struct thinkApp: App {
         FirebaseApp.configure()
         
         // Google Mobile Ads SDK 초기화
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        MobileAds.shared.start(completionHandler: nil)
         
         // 앱 시작 시 익명 로그인
         signInAnonymously()

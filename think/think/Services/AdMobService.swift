@@ -45,7 +45,7 @@ class AdMobService: NSObject, ObservableObject {
     func loadInterstitialAd() {
         let request = Request()
         InterstitialAd.load(
-            withAdUnitID: interstitialAdUnitID,
+            with: interstitialAdUnitID,
             request: request
         ) { [weak self] ad, error in
             if let error = error {
@@ -70,7 +70,7 @@ class AdMobService: NSObject, ObservableObject {
             return
         }
         
-        interstitialAd.present(fromRootViewController: viewController)
+        interstitialAd.present(from: viewController)
     }
 }
 

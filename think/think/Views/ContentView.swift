@@ -15,23 +15,66 @@ struct ContentView: View {
             Color.white.ignoresSafeArea()
             
             if debugMode {
-                // MARK: - 디버그 모드에서만 표시되는 개발자용 버튼
-                Button("🚧 DEV: 나머지 질문 데이터 업로드 (18개)") {
-                    Task {
-                        do {
-                            try await InitialDataService.shared.setupRemainingQuestions()
-                            await viewModel.loadQuestion()
-                        } catch {
-                            print("데이터 업로드 실패: \(error)")
+                // MARK: - 디버그 모드에서만 표시되는 개발자용 버튼들
+                VStack(spacing: 10) {
+                    Button("🚧 DEV: 나머지 질문 데이터 업로드 (18개)") {
+                        Task {
+                            do {
+                                try await InitialDataService.shared.setupRemainingQuestions()
+                                await viewModel.loadQuestion()
+                            } catch {
+                                print("데이터 업로드 실패: \(error)")
+                            }
                         }
                     }
+                    .debugButtonStyle()
+                    
+                    Button("📝 DEV: 추가 질문 데이터 업로드 (20개)") {
+                        Task {
+                            do {
+                                try await InitialDataService.shared.setupAdditionalQuestions()
+                                await viewModel.loadQuestion()
+                            } catch {
+                                print("추가 질문 업로드 실패: \(error)")
+                            }
+                        }
+                    }
+                    .debugButtonStyle()
+                    
+                    Button("🎯 DEV: 모든 질문 데이터 업로드 (40개)") {
+                        Task {
+                            do {
+                                try await InitialDataService.shared.setupAllQuestions()
+                                await viewModel.loadQuestion()
+                            } catch {
+                                print("전체 질문 업로드 실패: \(error)")
+                            }
+                        }
+                    }
+                    .debugButtonStyle()
+                    
+                    HStack(spacing: 10) {
+                        Button("💕 연애") {
+                            uploadCategory("연애")
+                        }
+                        .debugButtonStyle(compact: true)
+                        
+                        Button("🏢 직장생활") {
+                            uploadCategory("직장생활")
+                        }
+                        .debugButtonStyle(compact: true)
+                        
+                        Button("👫 우정") {
+                            uploadCategory("우정")
+                        }
+                        .debugButtonStyle(compact: true)
+                        
+                        Button("🤔 만약에게임") {
+                            uploadCategory("만약에게임")
+                        }
+                        .debugButtonStyle(compact: true)
+                    }
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(8)
-                .font(.system(size: 12))
             } else if viewModel.isLoading {
                 VStack(spacing: 20) {
                     ProgressView()
@@ -138,5 +181,29 @@ struct ContentView: View {
         }
         
         adMobService.showInterstitialAd(from: rootViewController)
+    }
+    
+    private func uploadCategory(_ category: String) {
+        Task {
+            do {
+                try await InitialDataService.shared.setupQuestionsByCategory(category)
+                await viewModel.loadQuestion()
+            } catch {
+                print("\(category) 카테고리 업로드 실패: \(error)")
+            }
+        }
+    }
+}
+
+// MARK: - View Extensions
+extension View {
+    func debugButtonStyle(compact: Bool = false) -> some View {
+        self
+            .padding(.horizontal, compact ? 8 : 16)
+            .padding(.vertical, compact ? 4 : 8)
+            .background(Color.green)
+            .foregroundColor(.white)
+            .cornerRadius(8)
+            .font(.system(size: compact ? 10 : 12))
     }
 }

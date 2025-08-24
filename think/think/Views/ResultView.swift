@@ -15,76 +15,77 @@ struct ResultView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack(spacing: 30) {
-            if let question = question {
-                VStack(spacing: 20) {
-                    Text("결과")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(Color(hex: "#1E1E1E"))
-                    
-                    Text(question.text)
-                        .font(.system(size: 20, weight: .medium))
-                        .foregroundColor(Color(hex: "#1E1E1E"))
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                    
-                    VStack(spacing: 16) {
-                        ResultBar(
-                            text: question.choiceA,
-                            percentage: question.choiceAPercentage,
-                            isSelected: selectedChoice == "A",
-                            color: Color(hex: "#007AFF")
-                        )
+                if let question = question {
+                    VStack(spacing: 20) {
+                        Text("결과")
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(Color(hex: "#1E1E1E"))
                         
-                        ResultBar(
-                            text: question.choiceB,
-                            percentage: question.choiceBPercentage,
-                            isSelected: selectedChoice == "B",
-                            color: Color(hex: "#FF6B6B")
-                        )
+                        Text(question.text)
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(Color(hex: "#1E1E1E"))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                        
+                        VStack(spacing: 16) {
+                            ResultBar(
+                                text: question.choiceA,
+                                percentage: question.choiceAPercentage,
+                                isSelected: selectedChoice == "A",
+                                color: Color(hex: "#007AFF")
+                            )
+                            
+                            ResultBar(
+                                text: question.choiceB,
+                                percentage: question.choiceBPercentage,
+                                isSelected: selectedChoice == "B",
+                                color: Color(hex: "#FF6B6B")
+                            )
+                        }
+                        .padding(.horizontal, 24)
+                        
+                        Text("\(question.totalResponses)명 참여")
+                            .font(.system(size: 14))
+                            .foregroundColor(Color(hex: "#1E1E1E").opacity(0.6))
+                        
+                        if selectedChoice == "A" && question.choiceAPercentage > 50 ||
+                            selectedChoice == "B" && question.choiceBPercentage > 50 {
+                            Text("🎉 당신은 다수파입니다!")
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(Color(hex: "#007AFF"))
+                        } else {
+                            Text("💎 당신은 특별한 소수파입니다!")
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(Color(hex: "#FF6B6B"))
+                        }
                     }
-                    .padding(.horizontal, 24)
                     
-                    Text("\(question.totalResponses)명 참여")
-                        .font(.system(size: 14))
-                        .foregroundColor(Color(hex: "#1E1E1E").opacity(0.6))
-                    
-                    if selectedChoice == "A" && question.choiceAPercentage > 50 ||
-                       selectedChoice == "B" && question.choiceBPercentage > 50 {
-                        Text("🎉 당신은 다수파입니다!")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(Color(hex: "#007AFF"))
-                    } else {
-                        Text("💎 당신은 특별한 소수파입니다!")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(Color(hex: "#FF6B6B"))
+                    HStack(spacing: 16) {
+                        Button(action: {
+                            showShareSheet = true
+                        }) {
+                            Label("공유하기", systemImage: "square.and.arrow.up")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 12)
+                                .background(Color(hex: "#4ECDC4"))
+                                .cornerRadius(12)
+                        }
+                        
+                        Button(action: onNext) {
+                            Text("다음 질문")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 12)
+                                .background(Color(hex: "#007AFF"))
+                                .cornerRadius(12)
+                        }
                     }
+                    
+                    Spacer(minLength: 60) // 배너 광고 공간 확보
                 }
-                
-                HStack(spacing: 16) {
-                    Button(action: {
-                        showShareSheet = true
-                    }) {
-                        Label("공유하기", systemImage: "square.and.arrow.up")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 12)
-                            .background(Color(hex: "#4ECDC4"))
-                            .cornerRadius(12)
-                    }
-                    
-                    Button(action: onNext) {
-                        Text("다음 질문")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 12)
-                            .background(Color(hex: "#007AFF"))
-                            .cornerRadius(12)
-                    }
-                }
-                
-                Spacer(minLength: 60) // 배너 광고 공간 확보
             }
             .padding(.vertical, 40)
             .sheet(isPresented: $showShareSheet) {
