@@ -15,12 +15,8 @@ struct thinkApp: App {
     init() {
         // Firebase 먼저 초기화
         FirebaseApp.configure()
-        
-        // Google Mobile Ads SDK 초기화 (Firebase 초기화 후)
-        MobileAds.shared.start { status in
-            print("✅ AdMob SDK 초기화 완료")
-        }
-        
+        // AdMob SDK 초기화
+        MobileAds.shared.start(completionHandler: nil)
         // 앱 시작 시 익명 로그인
         signInAnonymously()
     }

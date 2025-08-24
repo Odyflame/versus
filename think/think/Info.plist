@@ -44,7 +44,7 @@
     <key>NSPhotoLibraryAddUsageDescription</key>
     <string>결과를 이미지로 저장하기 위해 사진 라이브러리에 접근합니다.</string>
     <key>GADApplicationIdentifier</key>
-    <string>ca-app-pub-3940256099942544~1458002511</string>
+    <string>ca-app-pub-1593253714901171~1622822750</string>
     <key>SKAdNetworkItems</key>
     <array>
         <dict>

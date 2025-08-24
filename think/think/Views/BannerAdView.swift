@@ -1,39 +1,38 @@
 import SwiftUI
 import GoogleMobileAds
+import UIKit
 
 struct BannerAdView: UIViewRepresentable {
-    @StateObject private var adMobService = AdMobService.shared
+    private let adUnitID = "ca-app-pub-3940256099942544/2435281174" // 테스트 배너 광고 ID
     
     func makeUIView(context: Context) -> BannerView {
-        let banner = adMobService.createBannerView()
+        let bannerView = BannerView()
+        bannerView.adUnitID = adUnitID
         
-        // 루트 뷰 컨트롤러 설정
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let rootViewController = windowScene.windows.first?.rootViewController {
-            banner.rootViewController = rootViewController
+            bannerView.rootViewController = rootViewController
         }
         
-        return banner
+        // 배너 크기 설정
+        bannerView.adSize = AdSizeBanner
+        
+        // 광고 로드
+        let request = Request()
+        bannerView.load(request)
+        
+        return bannerView
     }
     
     func updateUIView(_ uiView: BannerView, context: Context) {
-        // 업데이트 필요 시 처리
+        // 업데이트가 필요한 경우 여기서 처리
     }
 }
 
-// 배너 광고를 포함한 컨테이너 뷰
+// MARK: - 배너 광고 컨테이너
 struct AdBannerContainer: View {
-    @StateObject private var adMobService = AdMobService.shared
-    
     var body: some View {
-        VStack(spacing: 0) {
-            if adMobService.isBannerAdLoaded {
-                BannerAdView()
-                    .frame(height: 50)
-                    .background(Color.white)
-                    .transition(.move(edge: .bottom))
-            }
-        }
-        .animation(.easeInOut(duration: 0.3), value: adMobService.isBannerAdLoaded)
+        BannerAdView()
+            .frame(width: 320, height: 50)
     }
 }

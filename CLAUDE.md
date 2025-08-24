@@ -214,3 +214,14 @@ service cloud.firestore {
 **⚠️ 중요:** 데이터 입력 없이는 앱이 빈 화면으로 나타납니다. 반드시 Firebase Console에서 위의 20개 질문 데이터를 먼저 입력해주세요.
 
 **📋 자세한 데이터 입력 가이드:** `think/FIREBASE_DATA_SETUP.md` 파일 참조
+## Google AdMob 통합 가이드
+- **사용 버전:** Google Mobile Ads SDK v12.9.0
+- **중요 사항:** GAD 접두어가 붙은 모든 클래스와 프로퍼티는 구버전 API입니다
+- **최신 API 사용 필수:**
+  - `GADBannerView` → `BannerView`
+  - `GADInterstitialAd` → `InterstitialAd`
+  - `GADRequest` → `Request`
+  - `GADAdSizeBanner` → `AdSizeBanner`
+  - `GADFullScreenContentDelegate` → `FullScreenContentDelegate`
+  - `GADFullScreenPresentingAd` → `any FullScreenPresentingAd`
+- 구버전 API 사용 시 빌드 오류가 발생하므로 반드시 최신 API로 변경하여 사용

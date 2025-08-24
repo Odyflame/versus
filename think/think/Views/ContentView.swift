@@ -3,7 +3,7 @@ import GoogleMobileAds
 
 struct ContentView: View {
     @StateObject private var viewModel = QuestionViewModel()
-    @StateObject private var adMobService = AdMobService.shared
+    @StateObject private var adMobManager = AdMobManager.shared
     @State private var questionCount = 0
     
     // MARK: - 디버그 모드 설정 (개발용)
@@ -151,8 +151,8 @@ struct ContentView: View {
                             questionCount += 1
                             
                             // 5문제마다 전면 광고 표시
-                            if questionCount % 5 == 0 {
-                                showInterstitialAd()
+                            if questionCount % 5 == 0 && adMobManager.isInterstitialReady {
+                                adMobManager.presentInterstitial()
                             }
                         }
                     )
