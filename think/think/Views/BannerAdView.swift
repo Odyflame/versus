@@ -4,7 +4,7 @@ import GoogleMobileAds
 struct BannerAdView: UIViewRepresentable {
     @StateObject private var adMobService = AdMobService.shared
     
-    func makeUIView(context: Context) -> GADBannerView {
+    func makeUIView(context: Context) -> BannerView {
         let banner = adMobService.createBannerView()
         
         // 루트 뷰 컨트롤러 설정
@@ -16,7 +16,7 @@ struct BannerAdView: UIViewRepresentable {
         return banner
     }
     
-    func updateUIView(_ uiView: GADBannerView, context: Context) {
+    func updateUIView(_ uiView: BannerView, context: Context) {
         // 업데이트 필요 시 처리
     }
 }
