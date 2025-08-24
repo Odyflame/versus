@@ -2,13 +2,15 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = QuestionViewModel()
+    @StateObject private var adMobManager = AdMobManager.shared
+    @State private var questionCount = 0
     
     // MARK: - 디버그 모드 설정 (개발용)
     // true로 변경하면 데이터 업로드 버튼이 표시됩니다
     private let debugMode = false  // 🔴 앱스토어 출시 전 반드시 false로 설정!
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
             Color.white.ignoresSafeArea()
             
             if debugMode {
@@ -97,12 +99,30 @@ struct ContentView: View {
                     }
                 )
             } else {
-                QuestionCardView(
-                    question: viewModel.currentQuestion,
-                    onChoiceSelected: { choice in
-                        viewModel.selectChoice(choice)
-                    }
-                )
+                VStack {
+                    QuestionCardView(
+                        question: viewModel.currentQuestion,
+                        onChoiceSelected: { choice in
+                            viewModel.selectChoice(choice)
+                            questionCount += 1
+                            
+                            // 5문제마다 전면 광고 표시
+                            if questionCount % 5 == 0 && adMobManager.isInterstitialReady {
+                                adMobManager.presentInterstitial()
+                            }
+                        }
+                    )
+                    
+                    Spacer(minLength: 60) // 배너 광고 공간 확보
+                }
+            }
+            
+            // 배너 광고 표시
+            VStack {
+                Spacer()
+                AdBannerContainer()
+                    .frame(height: 50)
+                    .background(Color.white.shadow(radius: 2))
             }
         }
         .task {
