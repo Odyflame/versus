@@ -120,3 +120,15 @@
 - **사용자 질문 제안 기능:** 사용자가 직접 밸런스 게임 질문을 제안하고, 관리자 승인 후 앱에 등록되는 기능
 - **댓글 기능:** 각 질문에 대한 사용자들의 의견을 나눌 수 있는 댓글 창 추가
 - **카테고리 필터:** 사용자가 원하는 카테고리의 질문만 골라서 볼 수 있는 기능 추가
+
+## Google AdMob 통합 가이드
+- **사용 버전:** Google Mobile Ads SDK v12.9.0
+- **중요 사항:** GAD 접두어가 붙은 모든 클래스와 프로퍼티는 구버전 API입니다
+- **최신 API 사용 필수:**
+  - `GADBannerView` → `BannerView`
+  - `GADInterstitialAd` → `InterstitialAd`
+  - `GADRequest` → `Request`
+  - `GADAdSizeBanner` → `AdSizeBanner`
+  - `GADFullScreenContentDelegate` → `FullScreenContentDelegate`
+  - `GADFullScreenPresentingAd` → `any FullScreenPresentingAd`
+- 구버전 API 사용 시 빌드 오류가 발생하므로 반드시 최신 API로 변경하여 사용
