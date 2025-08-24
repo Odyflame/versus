@@ -180,7 +180,7 @@ struct ContentView: View {
             return
         }
         
-        adMobService.showInterstitialAd(from: rootViewController)
+        AdMobService.shared.showInterstitialAd(from: rootViewController)
     }
     
     private func uploadCategory(_ category: String) {
